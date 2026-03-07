@@ -1,7 +1,7 @@
-import { readFileSync } from "node:fs";
+import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { Command } from "./command.interface";
-import chalk from "chalk";
+import { Command } from './command.interface';
+import chalk from 'chalk';
 
 export class VersionCommand implements Command {
   public getName(): string {

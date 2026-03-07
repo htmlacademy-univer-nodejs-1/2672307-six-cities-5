@@ -1,5 +1,5 @@
-import { EventEmitter } from "node:events";
-import { readFileSync } from "node:fs";
+import { EventEmitter } from 'node:events';
+import { readFileSync } from 'node:fs';
 
 export class TSVFileReader extends EventEmitter {
   constructor(public filename: string) {
@@ -7,7 +7,7 @@ export class TSVFileReader extends EventEmitter {
   }
 
   public read(): void {
-    const content = readFileSync(this.filename, { encoding: 'utf-8' })
+    const content = readFileSync(this.filename, { encoding: 'utf-8' });
 
     content
       .split('\n')

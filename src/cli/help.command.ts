@@ -1,5 +1,5 @@
-import { Command } from "./command.interface";
-import chalk from "chalk";
+import { Command } from './command.interface';
+import chalk from 'chalk';
 
 export class HelpCommand implements Command {
   public getName(): string {

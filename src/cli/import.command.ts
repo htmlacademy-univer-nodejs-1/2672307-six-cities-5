@@ -1,7 +1,7 @@
-import { Command } from "./command.interface";
+import { Command } from './command.interface';
+import chalk from 'chalk';
 import { TSVFileReader } from '../file-reader/tsv-file-reader.js';
 import { createOffer } from '../shared/helpers/offer.js';
-import chalk from "chalk";
 
 export class ImportCommand implements Command {
   public getName(): string {

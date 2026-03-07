@@ -1,5 +1,5 @@
-import { CityName, HousingType, Offer } from "../../types/offer.type";
-import { UserType } from "../../types/user.type";
+import { CityName, HousingType, Offer } from '../../types/offer.type';
+import { UserType } from '../../types/user.type';
 
 export function createOffer(row: string): Offer {
   const tokens = row.replace('\n', '').split('\t');
@@ -33,5 +33,5 @@ export function createOffer(row: string): Offer {
       latitude: Number.parseFloat(latitude),
       longitude: Number.parseFloat(longitude),
     },
-  }
+  };
 }
