@@ -1,0 +1,65 @@
+{
+  "info": {
+    "titles": [
+      "Beautiful & luxurious studio at great location",
+      "Wood and stone place",
+      "Canal View Prinsengracht",
+      "Nice, cozy, warm big bed apartment",
+      "The Joshua Tree House"
+    ],
+    "descriptions": [
+      "A quiet cozy space, decorated with rich colors and eclectic furniture and separate kitchen area.",
+      "Design interior in common space. This is a famous room with a high ceiling and a large window.",
+      "An independent house, strategically located between Rembrand Square and National Opera."
+    ],
+    "cities": [{
+        "name": "Paris",
+        "location": {
+          "latitude": 48.85661,
+          "longitude": 2.351499
+        }
+      },
+      {
+        "name": "Amsterdam",
+        "location": {
+          "latitude": 52.370216,
+          "longitude": 4.895168
+        }
+      },
+      {
+        "name": "Dusseldorf",
+        "location": {
+          "latitude": 51.225402,
+          "longitude": 6.776314
+        }
+      }
+    ],
+    "previewImages": [
+      "https://13.design.htmlacademy.pro/static/hotel/1.jpg",
+      "https://13.design.htmlacademy.pro/static/hotel/2.jpg"
+    ],
+    "housingImages": [
+      "https://13.design.htmlacademy.pro/static/hotel/3.jpg",
+      "https://13.design.htmlacademy.pro/static/hotel/4.jpg",
+      "https://13.design.htmlacademy.pro/static/hotel/5.jpg",
+      "https://13.design.htmlacademy.pro/static/hotel/6.jpg",
+      "https://13.design.htmlacademy.pro/static/hotel/7.jpg",
+      "https://13.design.htmlacademy.pro/static/hotel/8.jpg"
+    ],
+    "housingTypes": ["apartment", "house", "room", "hotel"],
+    "goods": ["Breakfast", "Air conditioning", "Laptop friendly workspace", "Baby seat", "Washer"],
+    "users": [{
+        "name": "Angelina",
+        "email": "angelina@gmail.com",
+        "avatarUrl": "img/avatar-angelina.jpg",
+        "type": "pro"
+      },
+      {
+        "name": "Max",
+        "email": "max@yahoo.com",
+        "avatarUrl": "img/avatar-max.jpg",
+        "type": "обычный"
+      }
+    ]
+  }
+}
