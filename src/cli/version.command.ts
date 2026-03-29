@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { Command } from './command.interface';
+import { Command } from './command.interface.js';
 import chalk from 'chalk';
 
 export class VersionCommand implements Command {
