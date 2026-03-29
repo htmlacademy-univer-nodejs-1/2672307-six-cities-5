@@ -1,5 +1,5 @@
-import { Logger as PinoInstance, pino } from "pino";
-import { Logger } from "./logger.interface.js";
+import { Logger as PinoInstance, pino } from 'pino';
+import { Logger } from './logger.interface.js';
 import { injectable } from 'inversify';
 
 @injectable()
