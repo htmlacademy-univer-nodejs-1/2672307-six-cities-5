@@ -12,3 +12,5 @@ coverage
 
 .env
 Thumbs.db
+
+mocks/*.tsv

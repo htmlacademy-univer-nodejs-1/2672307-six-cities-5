@@ -1,37 +1,42 @@
 import { Command } from './command.interface';
 import chalk from 'chalk';
-import { TSVFileReader } from '../file-reader/tsv-file-reader.js';
 import { createOffer } from '../shared/helpers/offer.js';
+import { TSVFileReader } from '../file-reader/tsv-file-reader.js';
 
 export class ImportCommand implements Command {
   public getName(): string {
     return '--import';
   }
 
-  public execute(filename: string): void {
+  public async execute(filename: string): Promise<void> {
     if (!filename) {
-      console.error(chalk.red('Нужно указать путь к файлу!'));
+      console.error(chalk.red('ОШИБКА: Нужно указать путь к файлу!'));
       return;
     }
 
     const fileReader = new TSVFileReader(filename.trim());
 
     fileReader.on('line', (line: string) => {
-      const offer = createOffer(line);
-      console.log(chalk.green('Импортировано предложение:'), offer.title);
-      console.dir(offer, { depth: null });
+      try {
+        const offer = createOffer(line);
+        console.log(chalk.cyan(`Импортирован оффер: ${offer.title}`));
+      } catch (err) {
+        console.error(chalk.yellow(`Ошибка парсинга строки: ${err}`));
+      }
     });
 
-    fileReader.on('end', () => {
-      console.log(chalk.bold.cyan('Импорт завершен!'));
+    fileReader.on('end', (count: number) => {
+      console.log(chalk.green(`\n✔ Импорт успешно завершен. Обработано строк: ${count}`));
+    });
+
+    fileReader.on('error', (err: Error) => {
+      console.error(chalk.red(`Ошибка чтения файла: ${err.message}`));
     });
 
     try {
-      fileReader.read();
+      await fileReader.read();
     } catch (err) {
-      if (err instanceof Error) {
-        console.error(chalk.red(`Не удалось импортировать данные: ${err.message}`));
-      }
+      console.error(chalk.red(`Не удалось прочитать файл: ${err}`));
     }
   }
 }
