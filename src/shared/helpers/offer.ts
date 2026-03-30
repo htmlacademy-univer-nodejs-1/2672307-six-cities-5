@@ -1,5 +1,5 @@
-import { CityName, HousingType, Offer } from '../../types/offer.type';
-import { UserType } from '../../types/user.type';
+import { CityName, HousingType, Offer } from '../../types/offer.type.js';
+import { UserType } from '../../types/user.type.js';
 
 export function createOffer(row: string): Offer {
   const tokens = row.replace('\n', '').split('\t');

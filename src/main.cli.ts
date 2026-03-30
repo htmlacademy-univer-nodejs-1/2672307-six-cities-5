@@ -26,7 +26,6 @@ class CLIApplication {
 
   public processCommand(argv: string[]) {
     const [, , commandName, ...parameters] = argv;
-    
     const command = this.commands[commandName] ?? this.commands[this.defaultCommand];
     command.execute(...parameters);
   }

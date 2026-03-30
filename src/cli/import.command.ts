@@ -1,4 +1,4 @@
-import { Command } from './command.interface';
+import { Command } from './command.interface.js';
 import chalk from 'chalk';
 import { createOffer } from '../shared/helpers/offer.js';
 import { TSVFileReader } from '../file-reader/tsv-file-reader.js';
