@@ -1,43 +1,54 @@
 import { EventEmitter } from 'node:events';
 import { createReadStream } from 'node:fs';
+import { createInterface, Interface } from 'node:readline';
 
 export class TSVFileReader extends EventEmitter {
+  private lineReader: Interface | null = null; // Храним ссылку на интерфейс чтения
+
   constructor(public filename: string) {
     super();
   }
 
   public async read(): Promise<void> {
     const readStream = createReadStream(this.filename, {
-      highWaterMark: 16384, // Читаем кусками по 16KB
+      highWaterMark: 16384,
       encoding: 'utf-8',
     });
 
-    let remainingData = '';
+    // Создаем интерфейс для построчного чтения
+    this.lineReader = createInterface({
+      input: readStream,
+      terminal: false,
+    });
+
     let importedRowCount = 0;
 
-    for await (const chunk of readStream) {
-      remainingData += chunk.toString();
-      let nextLinePosition = remainingData.indexOf('\n');
-
-      while (nextLinePosition >= 0) {
-        const completeRow = remainingData.slice(0, nextLinePosition);
-        remainingData = remainingData.slice(nextLinePosition + 1);
-
-        if (completeRow.trim().length > 0) {
-          importedRowCount++;
-          this.emit('line', completeRow);
-        }
-
-        nextLinePosition = remainingData.indexOf('\n');
+    // Подписываемся на событие каждой строки
+    this.lineReader.on('line', (line) => {
+      if (line.trim().length > 0) {
+        importedRowCount++;
+        this.emit('line', line);
       }
-    }
+    });
 
-    // Отдаем последний кусочек, если файл не закончился переносом строки
-    if (remainingData.trim().length > 0) {
-      importedRowCount++;
-      this.emit('line', remainingData);
-    }
+    // Подписываемся на завершение файла
+    this.lineReader.on('close', () => {
+      this.emit('end', importedRowCount);
+    });
 
-    this.emit('end', importedRowCount);
+    // Ждем завершения стрима (через промис, чтобы await в execute работал корректно)
+    await new Promise((resolve) => {
+      this.lineReader?.on('close', resolve);
+    });
+  }
+
+  // Метод для остановки чтения (вызывается из ImportCommand)
+  public pause() {
+    this.lineReader?.pause();
+  }
+
+  // Метод для возобновления чтения (вызывается из ImportCommand)
+  public resume() {
+    this.lineReader?.resume();
   }
 }
