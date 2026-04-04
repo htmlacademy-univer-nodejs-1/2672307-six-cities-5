@@ -7,7 +7,7 @@ export type RestSchema = {
   PORT: number;
   DB_IP: string;
   SALT: string;
-  DB_NAME: String;
+  DB_NAME: string;
   MONGO_INITDB_ROOT_USERNAME: string;
   MONGO_INITDB_ROOT_PASSWORD: string;
 }

@@ -49,7 +49,8 @@ export class RestApplication {
     } catch (error) {
       this.logger.error('Failed to connect to the database.');
       this.logger.error(error instanceof Error ? error.message : String(error));
-      process.exit(1);
+
+      throw new Error('Could not connect to database. Application will not start.');
     }
 
     await this.initMiddleware();
