@@ -17,6 +17,7 @@ export class RestApplication {
     @inject(Component.Config) private readonly config: Config<RestSchema>,
     @inject(Component.DatabaseClient) private readonly databaseClient: DatabaseClient,
     @inject(Component.OfferController) private readonly offerController: Controller,
+    @inject(Component.CommentController) private readonly commentController: Controller
   ) {
     this.server = express();
   }
@@ -29,7 +30,9 @@ export class RestApplication {
   private async initRoutes() {
     this.logger.info('Initializing routes...');
     this.server.use('/offers', this.offerController.router);
+    this.server.use('/comments', this.commentController.router);
   }
+
 
   public async init() {
     this.logger.info('Application initialization...');
