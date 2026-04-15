@@ -1,0 +1,176 @@
+openapi: 3.0.3
+info:
+  title: Six Cities API
+  description: Сервис для путешественников, предлагающий аренду жилья в шести городах.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:4000
+    description: Локальный сервер разработки
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    # --- СУЩНОСТИ ---
+    User:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string, minLength: 1, maxLength: 15 }
+        email: { type: string, format: email }
+        avatarUrl: { type: string }
+        type: { type: string, enum: [regular, pro] }
+      required: [id, name, email, type]
+
+    City:
+      type: object
+      properties:
+        name: { type: string, enum: [Paris, Cologne, Brussels, Amsterdam, Hamburg, Dusseldorf] }
+        location:
+          $ref: '#/components/schemas/Location'
+
+    Location:
+      type: object
+      properties:
+        latitude: { type: number, format: float }
+        longitude: { type: number, format: float }
+
+    Offer:
+      type: object
+      properties:
+        id: { type: string }
+        title: { type: string, minLength: 10, maxLength: 100 }
+        description: { type: string, minLength: 20, maxLength: 1024 }
+        postDate: { type: string, format: date-time }
+        city: { $ref: '#/components/schemas/City' }
+        previewImage: { type: string }
+        images: { type: array, items: { type: string }, minItems: 6, maxItems: 6 }
+        isPremium: { type: boolean }
+        isFavorite: { type: boolean }
+        rating: { type: number, minimum: 1, maximum: 5 }
+        type: { type: string, enum: [apartment, house, room, hotel] }
+        bedrooms: { type: integer, minimum: 1, maximum: 8 }
+        maxAdults: { type: integer, minimum: 1, maximum: 10 }
+        price: { type: integer, minimum: 100, maximum: 100000 }
+        goods:
+          type: array
+          items: { type: string, enum: [Breakfast, Air conditioning, Laptop friendly workspace, Baby seat, Washer, Towels, Fridge] }
+        author: { $ref: '#/components/schemas/User' }
+        commentCount: { type: integer }
+        location: { $ref: '#/components/schemas/Location' }
+
+    Comment:
+      type: object
+      properties:
+        id: { type: string }
+        text: { type: string, minLength: 5, maxLength: 1024 }
+        date: { type: string, format: date-time }
+        rating: { type: integer, minimum: 1, maximum: 5 }
+        user: { $ref: '#/components/schemas/User' }
+
+    # --- DTO (Входные данные) ---
+    CreateOfferDto:
+      type: object
+      required: [title, description, city, previewImage, images, isPremium, type, bedrooms, maxAdults, price, goods, location]
+      properties:
+        title: { type: string, minLength: 10, maxLength: 100 }
+        description: { type: string, minLength: 20, maxLength: 1024 }
+        city: { type: string, enum: [Paris, Cologne, Brussels, Amsterdam, Hamburg, Dusseldorf] }
+        previewImage: { type: string }
+        images: { type: array, items: { type: string }, minItems: 6, maxItems: 6 }
+        isPremium: { type: boolean }
+        type: { type: string, enum: [apartment, house, room, hotel] }
+        bedrooms: { type: integer, minimum: 1, maximum: 8 }
+        maxAdults: { type: integer, minimum: 1, maximum: 10 }
+        price: { type: integer, minimum: 100, maximum: 100000 }
+        goods: { type: array, items: { type: string } }
+        location: { $ref: '#/components/schemas/Location' }
+
+paths:
+  # --- ОФФЕРЫ ---
+  /offers:
+    get:
+      summary: Получение списка предложений
+      parameters:
+        - name: limit
+          in: query
+          schema: { type: integer, default: 60 }
+      responses:
+        '200':
+          description: Массив предложений
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: '#/components/schemas/Offer' } }
+    post:
+      summary: Создание нового предложения
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateOfferDto' }
+      responses:
+        '201':
+          description: Объект созданного предложения
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Offer' }
+
+  /offers/{offerId}:
+    parameters:
+      - name: offerId
+        in: path
+        required: true
+        schema: { type: string }
+    get:
+      summary: Детальная информация об объявлении
+      responses:
+        '200':
+          description: Полная информация
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Offer' }
+    patch:
+      summary: Редактирование предложения
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: Обновленный объект
+    delete:
+      summary: Удаление предложения
+      security: [{ bearerAuth: [] }]
+      responses:
+        '204':
+          description: Предложение удалено
+
+  # --- КОММЕНТАРИИ ---
+  /offers/{offerId}/comments:
+    get:
+      summary: Список комментариев к предложению
+      responses:
+        '200':
+          description: Массив из 50 последних комментариев
+    post:
+      summary: Добавление комментария
+      security: [{ bearerAuth: [] }]
+      responses:
+        '201':
+          description: Созданный комментарий
+
+  # --- ПОЛЬЗОВАТЕЛИ ---
+  /users/register:
+    post:
+      summary: Регистрация нового пользователя
+      responses:
+        '201':
+          description: Пользователь создан
+  /users/login:
+    post:
+      summary: Вход (получение токена)
+      responses:
+        '200':
+          description: Токен выдан
